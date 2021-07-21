@@ -1,9 +1,17 @@
+import Clock from './Clock.js';
+
 export default class PadControl {
     constructor() {
         this.domElements = this.getDomElements();
         this.padMachine = null;
         this.gridControl = null;
         this.gridControlSounds = null;
+        this.bpmControl = null;
+        this.bpmControlBar = null;
+        this.clock = new Clock();
+        this.bpmControlBarStepsCount = 10;
+        this.bpmControlBarCurrentStep = 0;
+        this.bpmControlMillisecondsHandleId = null;
         this.gridSoundsMatrix = [];
     }
 
@@ -11,16 +19,21 @@ export default class PadControl {
         return {
             gridControlId: 'grid-control',
             gridControlSoundsId: 'grid-control-sounds',
+            bpmControlId: 'bpm-control',
+            bpmControlBarId: 'bpm-control-bar',
             baseGridControlSoundContainerClass: 'pad-row',
             baseGridControlSoundClass: 'pad-control',
             baseGridControlSoundSelectClass: 'pad-control-select',
             baseGridControlSoundShortCodeInputClass: 'pad-control-shortcode-input',
+            bpmControlBarActiveClass: 'bpm-control-bar-active',
         };
     }
 
     queryDomElements() {
         this.gridControl = document.getElementById(this.domElements.gridControlId);
         this.gridControlSounds = document.getElementById(this.domElements.gridControlSoundsId);
+        this.bpmControl = document.getElementById(this.domElements.bpmControlId);
+        this.bpmControlBar = document.getElementById(this.domElements.bpmControlBarId);
         this.log('Control elements queried');
     }
 
@@ -51,6 +64,10 @@ export default class PadControl {
             window.addEventListener('keydown', (event) => {
                 this.bindKeyShortCode(event.key);
             });
+        }
+        if (only === '' || only === 'bpm-control') {
+            this.bpmControl.addEventListener('change', () => this.onBpmControlChange());
+            this.bpmControl.dispatchEvent(new Event('change'));
         }
         this.log('Watching controls');
     }
@@ -169,6 +186,36 @@ export default class PadControl {
         }
         this.gridControlSounds.innerHTML = html;
         this.watchControlsChange('grid-sounds');
+    }
+
+    onBpmControlChange() {
+        this.renderBpmControlBar();
+        const bpm = parseInt(this.bpmControl.value, 10);
+        const milliseconds = Math.floor(60000 / bpm);
+        if (this.bpmControlMillisecondsHandleId !== null) {
+            this.clock.removeMillisecondsHandler(this.bpmControlMillisecondsHandleId);
+        }
+        this.bpmControlMillisecondsHandleId = this.clock.onMilliseconds(milliseconds, () => this.nextBpmControlBar());
+        this.clock.stopMillisecondsClock();
+        this.clock.startMillisecondsClock();
+    }
+
+    renderBpmControlBar() {
+        const html = `<div class="${this.domElements.bpmControlBarActiveClass}"></div>`;
+        this.bpmControlBar.innerHTML = html + ('<div></div>').repeat(this.bpmControlBarStepsCount - 1);
+    }
+
+    nextBpmControlBar() {
+        this.bpmControlBarCurrentStep = (this.bpmControlBarCurrentStep + 1) % this.bpmControlBarStepsCount;
+        let i = 0;
+        for (const bar of this.bpmControlBar.querySelectorAll('div')) {
+            bar.classList.remove(this.domElements.bpmControlBarActiveClass);
+            if (i === this.bpmControlBarCurrentStep) {
+                bar.classList.add(this.domElements.bpmControlBarActiveClass);
+            }
+            i++;
+        }
+
     }
 
     setPadMachine(padMachine) {

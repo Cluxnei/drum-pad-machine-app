@@ -17,7 +17,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    flex: 0.5;
+    flex: 1;
 }
 
 .pad-row {
@@ -35,6 +35,7 @@ body {
     border-radius: 15px;
     margin: 3px;
     transition: all 200ms ease-in-out;
+    opacity: 0.1;
 }
 
 .pad-control {
@@ -64,7 +65,6 @@ body {
 }
 
 .pad-machine-controls-container {
-    flex: 0.5;
     flex-direction: column;
     background-color: #444;
 }
@@ -72,8 +72,6 @@ body {
 .controls-row {
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
     border-bottom: solid 1px white;
 }
 
@@ -90,4 +88,22 @@ body {
 #bpm-control {
     font-size: 23px;
     width: 80px;
+}
+
+#bpm-control-bar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+}
+
+#bpm-control-bar div {
+    width: 40px;
+    height: 15px;
+    background-color: black;
+    margin: 0 5px;
+}
+
+#bpm-control-bar .bpm-control-bar-active {
+    background-color: yellow;
 }
