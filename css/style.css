@@ -53,6 +53,7 @@ body {
 
 .pad-control select, .pad-control input {
     width: 80%;
+    font-size: 20px;
 }
 
 .pad:hover {
@@ -72,6 +73,7 @@ body {
     display: flex;
     flex-direction: row;
     border-bottom: solid 1px white;
+    align-items: center;
 }
 
 .control-group {
@@ -87,6 +89,11 @@ body {
 #bpm-control {
     font-size: 23px;
     width: 80px;
+}
+
+#metronome-control {
+    transform: scale(2.5);
+    margin-left: 10px;
 }
 
 #bpm-control-bar {

@@ -8,11 +8,16 @@ export default class PadControl {
         this.gridControlSounds = null;
         this.bpmControl = null;
         this.bpmControlBar = null;
+        this.metronomeControl = null;
         this.clock = new Clock();
-        this.bpmControlBarStepsCount = 10;
+        this.bpmControlBarStepsCount = 8;
         this.bpmControlBarCurrentStep = 0;
         this.bpmControlMillisecondsHandleId = null;
         this.gridSoundsMatrix = [];
+        this.metronome = {
+            enabled: false,
+            sound: new Audio('audio/tom3.wav'),
+        };
     }
 
     getDomElements() {
@@ -26,6 +31,7 @@ export default class PadControl {
             baseGridControlSoundSelectClass: 'pad-control-select',
             baseGridControlSoundShortCodeInputClass: 'pad-control-shortcode-input',
             bpmControlBarActiveClass: 'bpm-control-bar-active',
+            metronomeControlId: 'metronome-control',
         };
     }
 
@@ -34,6 +40,7 @@ export default class PadControl {
         this.gridControlSounds = document.getElementById(this.domElements.gridControlSoundsId);
         this.bpmControl = document.getElementById(this.domElements.bpmControlId);
         this.bpmControlBar = document.getElementById(this.domElements.bpmControlBarId);
+        this.metronomeControl = document.getElementById(this.domElements.metronomeControlId);
         this.log('Control elements queried');
     }
 
@@ -69,7 +76,15 @@ export default class PadControl {
             this.bpmControl.addEventListener('change', () => this.onBpmControlChange());
             this.bpmControl.dispatchEvent(new Event('change'));
         }
+        if (only === '' || only === 'metronome-control') {
+            this.metronomeControl.addEventListener('change', () => this.onMetronomeControlChange());
+            this.metronomeControl.dispatchEvent(new Event('change'));
+        }
         this.log('Watching controls');
+    }
+
+    onMetronomeControlChange() {
+        this.metronome.enabled = this.metronomeControl.checked;
     }
 
     bindKeyShortCode(key) {
@@ -205,7 +220,17 @@ export default class PadControl {
         this.bpmControlBar.innerHTML = html + ('<div></div>').repeat(this.bpmControlBarStepsCount - 1);
     }
 
+    handleMetronome() {
+        if (!this.metronome.enabled) {
+            return;
+        }
+        this.metronome.sound.cloneNode().play().then(() => {
+            this.log('Metronome played');
+        });
+    }
+
     nextBpmControlBar() {
+        this.handleMetronome();
         this.bpmControlBarCurrentStep = (this.bpmControlBarCurrentStep + 1) % this.bpmControlBarStepsCount;
         let i = 0;
         for (const bar of this.bpmControlBar.querySelectorAll('div')) {
