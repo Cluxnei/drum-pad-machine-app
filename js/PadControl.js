@@ -64,9 +64,12 @@ export default class PadControl {
             let j = 0;
             for (const padControlSound of row) {
                 if (padControlSound.shortcodeKey === key) {
-                    this.padMachine.matrix[i][j].sound.cloneNode().play().then(() => {
+                    const padElement = document.querySelector(
+                        `.${this.padMachine.baseElements.basePadClass}[data-row="${i}"][data-col="${j}"]`
+                    );
+                    this.padMachine.touchPad(i, j, () => {
                         this.log('Pad sound played by shortcode');
-                    });
+                    }, padElement);
                 }
                 j++;
             }
@@ -136,13 +139,13 @@ export default class PadControl {
         for (let i = 0; i < rows; i++) {
             const row = [];
             for (let j = 0; j < padPerRow; j++) {
-                row.push(this.generateNewPadSoundControl(i, j));
+                row.push(this.generateNewPadSoundControl());
             }
             this.gridSoundsMatrix.push(row);
         }
     }
 
-    generateNewPadSoundControl(i, j) {
+    generateNewPadSoundControl() {
         return {
             soundSrc: 'audio/kick1.wav',
             shortcodeKey: null,

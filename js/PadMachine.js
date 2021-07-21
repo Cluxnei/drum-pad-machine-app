@@ -14,6 +14,7 @@ export default class PadMachine {
             padMachineId: 'pad-machine',
             basePadContainerClass: 'pad-row',
             basePadClass: 'pad',
+            activeClass: 'pad-active'
         };
     }
 
@@ -90,16 +91,23 @@ export default class PadMachine {
         for (const domPadElement of domPadElements) {
             const row = parseInt(domPadElement.getAttribute('data-row'));
             const col = parseInt(domPadElement.getAttribute('data-col'));
-            domPadElement.addEventListener('click', () => this.onPadClick(row, col));
+            domPadElement.addEventListener('click', () => this.onPadClick(row, col, domPadElement));
         }
     }
 
-    onPadClick(row, col) {
-        const pad = this.matrix[row][col];
-        this.log('Pad clicked', pad);
-        pad.sound.cloneNode().play().then(() => {
+    onPadClick(row, col, padElement) {
+        this.log('Pad clicked');
+        this.touchPad(row, col, () => {
             this.log('Play pad sound');
-        });
+        }, padElement);
+    }
+
+    touchPad(i, j, playSoundCallback, padDomElement) {
+        this.matrix[i][j].sound.cloneNode().play().then(playSoundCallback);
+        padDomElement.classList.add(this.baseElements.activeClass);
+        setTimeout(() => {
+            padDomElement.classList.remove(this.baseElements.activeClass);
+        }, 200);
     }
 
     log(...args) {
