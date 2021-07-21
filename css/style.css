@@ -35,7 +35,6 @@ body {
     border-radius: 15px;
     margin: 3px;
     transition: all 200ms ease-in-out;
-    opacity: 0.1;
 }
 
 .pad-control {
