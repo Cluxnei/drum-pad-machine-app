@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Pad Machine</title>
+    <script src="js/script.js" defer type="module"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="pad-machine-container">
+        <div id="pad-machine"></div>
+    </div>
+    <div class="pad-machine-controls-container">
+        <div id="pad-machine-controls">
+            <div class="controls-row">
+                <div class="control-group">
+                    <label for="grid-control" class="control-label">
+                        GRID
+                    </label>
+                    <select id="grid-control">
+                        <option value="3x3">3x3</option>
+                        <option value="4x3">4x3</option>
+                        <option value="5x3">5x3</option>
+                        <option value="3x4">3x4</option>
+                        <option value="4x4">4x4</option>
+                        <option value="5x4">5x4</option>
+                    </select>
+                </div>
+            </div>
+            <div class="controls-row">
+                <div>
+                    <div class="control-group">
+                        <span class="control-label">
+                            SOUNDS GRID
+                        </span>
+                    </div>
+                    <div id="grid-control-sounds"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
